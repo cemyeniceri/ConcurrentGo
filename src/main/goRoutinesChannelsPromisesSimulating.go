@@ -13,7 +13,7 @@ func main() {
 	SavePOforPromise(po, false).Then(func(obj interface{}) error {
 		po := obj.(*PurchaseOrderPromise)
 		fmt.Printf("Purchase Order saved with ID: %d\n", po.Number)
-		return nil
+		return errors.New("first promise failed")
 	}, func(err error) {
 		fmt.Printf("Failed to save Purchase Order: " + err.Error() + "\r")
 	}).Then(func(obj interface{}) error {
@@ -60,7 +60,7 @@ func (promise *Promise) Then(success func(interface{}) error, failure func(error
 	result.successChannel = make(chan interface{}, 1)
 	result.failureChannel = make(chan error, 1)
 
-	timeout := time.After(1 - time.Second)
+	timeout := time.After(1 * time.Second)
 
 	go func() {
 		select {
